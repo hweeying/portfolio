@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- COLORS --- */
+  --color-paper: #fdfbf7;
+  --color-paper-muted: #e5e0d8;
+  --color-pencil: #2d2d2d;
+  --color-correction: #ff4d4d; /* Red Accent */
+  --color-ballpoint: #2d5da1;  /* Blue Accent */
+  --color-highlighter: #fff9c4; /* Yellow */
+
+  /* --- FONTS (Mapped to Next.js variables) --- */
+  --font-heading: var(--font-kalam), cursive;
+  --font-body: var(--font-patrick), cursive;
+
+  /* --- WOBBLY RADII (The Core "Hand-Drawn" look) --- */
+  --radius-wobbly: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --radius-wobbly-md: 20px 225px 20px 225px / 225px 20px 225px 20px;
+  --radius-wobbly-sm: 255px 15px 225px 15px / 15px 225px 15px 255px;
+
+  /* --- HARD SHADOWS --- */
+  --shadow-hard: 4px 4px 0px 0px #2d2d2d;
+  --shadow-hard-sm: 2px 2px 0px 0px #2d2d2d;
+  --shadow-hard-lg: 8px 8px 0px 0px #2d2d2d;
+
+  /* --- ANIMATIONS --- */
+  --animate-jiggle: jiggle 3s ease-in-out infinite;
+  
+  @keyframes jiggle {
+    0%, 100% { transform: rotate(-1deg); }
+    50% { transform: rotate(1deg); }
+  }
+}
+
+/* --- UTILITIES --- */
+
+/* Paper Texture Pattern */
+@utility bg-paper-pattern {
+  background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* --- BASE STYLES --- */
+body {
+  background-color: var(--color-paper);
+  color: var(--color-pencil);
+  /* Apply the texture globally */
+  background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes highlighter-flash {
+  0% { background-color: transparent; }
+  15% { background-color: var(--color-highlighter); transform: scale(1.02) rotate(1deg); }
+  100% { background-color: transparent; transform: scale(1) rotate(0deg); }
+}
+
+section:target {
+  animation: highlighter-flash 1.5s ease-out;
+  /* Optional: Add a wobbly border while highlighted */
+  border-radius: var(--radius-wobbly-md);
+}
