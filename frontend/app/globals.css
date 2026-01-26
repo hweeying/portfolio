@@ -1,66 +1,115 @@
 @import "tailwindcss";
 
+/* 
+  Tailwind v4 配置区域 
+  在这里定义的变量，会自动生成类似 text-foreground-muted 的类名
+*/
 @theme {
-  /* --- COLORS --- */
-  --color-paper: #fdfbf7;
-  --color-paper-muted: #e5e0d8;
-  --color-pencil: #2d2d2d;
-  --color-correction: #ff4d4d; /* Red Accent */
-  --color-ballpoint: #2d5da1;  /* Blue Accent */
-  --color-highlighter: #fff9c4; /* Yellow */
+  /* --- 1. 颜色配置 (Global Colors) --- */
 
-  /* --- FONTS (Mapped to Next.js variables) --- */
-  --font-heading: var(--font-kalam), cursive;
-  --font-body: var(--font-patrick), cursive;
+  /* 主文字颜色: 亮白 (Gray 100) */
+  --color-foreground: theme("colors.gray.100");
 
-  /* --- WOBBLY RADII (The Core "Hand-Drawn" look) --- */
-  --radius-wobbly: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  --radius-wobbly-md: 20px 225px 20px 225px / 225px 20px 225px 20px;
-  --radius-wobbly-sm: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  /* 副文字颜色 (muted): 设为灰色 (Gray 400) - 解决你觉得字太黑的问题 */
+  --color-foreground-muted: theme("colors.gray.400");
 
-  /* --- HARD SHADOWS --- */
-  --shadow-hard: 4px 4px 0px 0px #2d2d2d;
-  --shadow-hard-sm: 2px 2px 0px 0px #2d2d2d;
-  --shadow-hard-lg: 8px 8px 0px 0px #2d2d2d;
+  /* 次要文字 (subtle): 更深的灰色 (Gray 600) */
+  --color-foreground-subtle: theme("colors.gray.600");
 
-  /* --- ANIMATIONS --- */
-  --animate-jiggle: jiggle 3s ease-in-out infinite;
-  
-  @keyframes jiggle {
-    0%, 100% { transform: rotate(-1deg); }
-    50% { transform: rotate(1deg); }
+  /* 背景颜色 */
+  --color-background-deep: #020203;
+  --color-background-base: #050506;
+  --color-background-elevated: #0a0a0c;
+
+  /* 强调色 (Accent) */
+  --color-accent: #5e6ad2;
+  --color-accent-bright: #6872d9;
+  --color-accent-glow: rgba(94, 106, 210, 0.3);
+
+  /* 边框 */
+  --color-border: rgba(255, 255, 255, 0.06);
+
+  /* --- 2. 动画配置 (Animations) --- */
+  --animate-blob-float: float 10s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(1deg);
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
-/* --- UTILITIES --- */
-
-/* Paper Texture Pattern */
-@utility bg-paper-pattern {
-  background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* --- BASE STYLES --- */
+/* --- 3. 基础样式 (Base Styles) --- */
 body {
-  background-color: var(--color-paper);
-  color: var(--color-pencil);
-  /* Apply the texture globally */
-  background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
-  background-size: 24px 24px;
+  /* 强制全局背景和文字颜色 */
+  background-color: var(--color-background-base);
+  color: var(--color-foreground);
+
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-@keyframes highlighter-flash {
-  0% { background-color: transparent; }
-  15% { background-color: var(--color-highlighter); transform: scale(1.02) rotate(1deg); }
-  100% { background-color: transparent; transform: scale(1) rotate(0deg); }
+/* 渐变文字工具类 */
+.text-gradient {
+  background: linear-gradient(to bottom, #ffffff 30%, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-section:target {
-  animation: highlighter-flash 1.5s ease-out;
-  /* Optional: Add a wobbly border while highlighted */
-  border-radius: var(--radius-wobbly-md);
+/* 噪点背景工具类 */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* 这是一个必须加的类，用于让 "Building digital" 变成渐变白 */
+.text-gradient {
+  background: linear-gradient(to bottom, #ffffff 30%, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* TagCloud 容器样式 */
+.tagcloud-container {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+  letter-spacing: 1px;
+  /* 确保它在父元素中间 */
+  position: relative;
+}
+
+/* 每一个图标项的样式 */
+.tagcloud-container span {
+  cursor: pointer;
+  /* 添加一点发光效果让它更有科技感 */
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+  transition: all 0.3s ease;
+}
+
+/* 鼠标悬停在某个具体图标上时 */
+.tagcloud-container span:hover {
+  transform: scale(1.2); /* 放大 */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); /* 发光增强 */
+  z-index: 100;
 }

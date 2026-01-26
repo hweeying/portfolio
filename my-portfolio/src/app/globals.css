@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* 
+  BOLD TYPOGRAPHY DESIGN SYSTEM TOKENS
+  ------------------------------------
+  We define the theme directly here.
+*/
+@theme {
+  /* COLORS */
+  --color-background: #0a0a0a;
+  --color-foreground: #fafafa;
+
+  --color-muted: #1a1a1a;
+  --color-muted-foreground: #737373;
+
+  --color-accent: #ff3d00; /* The Vermillion */
+  --color-accent-foreground: #0a0a0a;
+
+  --color-border: #262626;
+
+  /* TYPOGRAPHY */
+  /* We link these to the Next.js CSS variables we will set up in layout.js */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui;
+  --font-mono: var(--font-jetbrains), monospace;
+  --font-serif: var(--font-playfair), serif;
+
+  /* TRACKING (Letter Spacing) */
+  --tracking-tighter: -0.06em;
+  --tracking-tight: -0.04em;
+  --tracking-normal: -0.01em;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.1em;
+  --tracking-widest: 0.2em;
+
+  /* BORDER RADIUS - ZERO TOLERANCE */
+  /* We override all radius utilities to be 0px to enforce the sharp look */
+  --radius-none: 0px;
+  --radius-sm: 0px;
+  --radius-DEFAULT: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-full: 0px;
+}
+
+/* GLOBAL STYLES & TEXTURE */
+:root {
+  /* Inline SVG Noise Texture */
+  --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Noise Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+  background-image: var(--noise);
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+}
+
+/* Utilities not yet in standard Tailwind but needed for the system */
+@utility text-balance {
+  text-wrap: balance;
+}
+
+.text-muted-foreground {
+  color: whitesmoke;
+}
