@@ -35,8 +35,8 @@ const playfair = Playfair_Display ({
 });
 
 export const metadata = {
-  title: 'Engineer Portfolio',
-  description: 'Bold Typography Design System',
+  title: 'Jasmine Lai Hwee Ying',
+  description: 'Software Engineer Portfolio',
 };
 
 export default function RootLayout({children}) {
