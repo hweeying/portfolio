@@ -123,9 +123,7 @@ export default function Home () {
         aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={mobileOpen}
         onClick={() => setMobileOpen (v => !v)}
-        className="md:hidden fixed top-4 right-4 z-50 inline-flex items-center justify-center
-                   w-12 h-12 rounded-full border border-border bg-background/80 backdrop-blur-md
-                   shadow-sm hover:border-accent transition-colors"
+        className="md:hidden fixed top-4 right-4 z-50 inline-flex items-center justify-center w-12 h-12 rounded-full border border-border bg-background/80 backdrop-blur-md shadow-sm hover:border-accent transition-colors"
       >
         {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
@@ -243,9 +241,12 @@ export default function Home () {
               variants={itemVars}
               className="flex flex-wrap gap-8 items-center"
             >
-              <Button variant="primary" href="#project">
-                See Projects <ArrowRight className="w-4 h-4" />
-              </Button>
+              <a href="#project">
+                <Button variant="primary">
+                  See Projects
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </a>
               <div className="flex gap-4 text-muted-foreground">
                 <a
                   href="https://github.com/hweeying"
