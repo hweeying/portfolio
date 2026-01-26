@@ -1,7 +1,8 @@
 'use client';
 
-import {motion} from 'framer-motion';
-import {ArrowRight, Github, Linkedin, Mail, Phone} from 'lucide-react';
+import {useEffect, useState} from 'react';
+import {motion, AnimatePresence} from 'framer-motion';
+import {ArrowRight, Github, Linkedin, Mail, Phone, Menu, X} from 'lucide-react';
 import {Button} from '@/components/Button';
 import {experience} from '@/data/Experience';
 import SkillOrbit from '@/components/SkillOrbit';
@@ -54,36 +55,158 @@ const fadeInVars = {
 };
 
 export default function Home () {
+  const [mobileOpen, setMobileOpen] = useState (false);
+
+  // Close menu when resizing up to desktop
+  useEffect (() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMobileOpen (false);
+    };
+    window.addEventListener ('resize', onResize);
+    return () => window.removeEventListener ('resize', onResize);
+  }, []);
+
+  // Lock body scroll when menu open
+  useEffect (
+    () => {
+      document.body.style.overflow = mobileOpen ? 'hidden' : '';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    },
+    [mobileOpen]
+  );
+
+  const navLinks = [
+    {href: '#project', label: 'PROJECTS'},
+    {href: '#experience', label: 'EXPERIENCE'},
+    {href: '#education', label: 'EDUCATION'},
+  ];
+
+  const closeAndJump = href => {
+    setMobileOpen (false);
+    // let the menu start closing, then jump
+    requestAnimationFrame (() => {
+      const el = document.querySelector (href);
+      el.scrollIntoView ({behavior: 'smooth', block: 'start'});
+    });
+  };
+
   return (
     <main className="min-h-screen pb-40 relative">
-      {/* Navbar */}
+      {/* Navbar (desktop) */}
       <nav className="fixed top-0 w-full z-40 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <span className="font-display font-bold text-xl tracking-tight">
             JASMINE LAI HWEE YING
           </span>
-          <div className="flex gap-6">
-            <a
-              href="#project"
-              className="text-sm font-mono hover:text-accent transition-colors"
-            >
-              PROJECTS
-            </a>
-            <a
-              href="#experience"
-              className="text-sm font-mono hover:text-accent transition-colors"
-            >
-              EXPERIENCE
-            </a>
-            <a
-              href="#education"
-              className="text-sm font-mono hover:text-accent transition-colors"
-            >
-              EDUCATION
-            </a>
+
+          {/* Desktop links */}
+          <div className="hidden md:flex gap-6">
+            {navLinks.map (l => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-sm font-mono hover:text-accent transition-colors"
+              >
+                {l.label}
+              </a>
+            ))}
           </div>
         </div>
       </nav>
+
+      {/* Floating Burger (mobile) */}
+      <button
+        type="button"
+        aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={mobileOpen}
+        onClick={() => setMobileOpen (v => !v)}
+        className="md:hidden fixed top-4 right-4 z-50 inline-flex items-center justify-center
+                   w-12 h-12 rounded-full border border-border bg-background/80 backdrop-blur-md
+                   shadow-sm hover:border-accent transition-colors"
+      >
+        {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
+      {/* Mobile Expandable Menu */}
+      <AnimatePresence>
+        {mobileOpen &&
+          <div>
+            {/* Backdrop */}
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              className="md:hidden fixed inset-0 z-40 bg-black/40"
+              initial={{opacity: 0}}
+              animate={{opacity: 1}}
+              exit={{opacity: 0}}
+              onClick={() => setMobileOpen (false)}
+            />
+
+            {/* Panel */}
+            <motion.aside
+              className="md:hidden fixed top-0 right-0 z-50 h-full w-[86vw] max-w-sm
+                         bg-background border-l border-border shadow-xl"
+              initial={{x: '100%'}}
+              animate={{x: 0}}
+              exit={{x: '100%'}}
+              transition={{type: 'spring', stiffness: 260, damping: 26}}
+            >
+              <div className="pt-20 px-6 pb-8 flex flex-col gap-6">
+                <div className="font-display font-bold text-lg tracking-tight">
+                  JASMINE LAI HWEE YING
+                </div>
+
+                <div className="flex flex-col">
+                  {navLinks.map (l => (
+                    <button
+                      key={l.href}
+                      onClick={() => closeAndJump (l.href)}
+                      className="text-left py-4 border-b border-border font-mono text-sm
+                                 hover:text-accent transition-colors"
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="pt-2 flex gap-4 text-muted-foreground">
+                  <a
+                    href="https://github.com/hweeying"
+                    className="hover:text-accent transition-colors"
+                  >
+                    <Github className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/jasminehweeying"
+                    className="hover:text-accent transition-colors"
+                  >
+                    <Linkedin className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="mailto:jasminehweeying@gmail.com"
+                    className="hover:text-accent transition-colors"
+                  >
+                    <Mail className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="tel:+60167149223"
+                    className="hover:text-accent transition-colors"
+                  >
+                    <Phone className="w-6 h-6" />
+                  </a>
+                  <a
+                    href="https://wa.me/+60167149223"
+                    className="hover:text-accent transition-colors"
+                  >
+                    <FaWhatsapp className="w-6 h-6" />
+                  </a>
+                </div>
+              </div>
+            </motion.aside>
+          </div>}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <section className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
@@ -101,7 +224,6 @@ export default function Home () {
             >
               01 / SOFTWARE ENGINEER
             </motion.p>
-
             <motion.h1
               variants={itemVars}
               className="font-display font-bold text-5xl md:text-6xl lg:text-7xl leading-[0.9] tracking-tighter mb-12"
@@ -329,6 +451,83 @@ export default function Home () {
 
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-border mt-24">
+        <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8 md:gap-0 md:items-center md:justify-between">
+
+          {/* Left */}
+          <div className="flex flex-col gap-2">
+            <span className="font-display font-bold tracking-tight">
+              JASMINE LAI HWEE YING
+            </span>
+            <span className="font-mono text-xs text-muted-foreground">
+              Software Engineer · Building things on the web
+            </span>
+          </div>
+
+          {/* Center (optional links) */}
+          <div className="flex gap-6 font-mono text-xs tracking-widest text-muted-foreground">
+            <a href="#project" className="hover:text-accent transition-colors">
+              PROJECTS
+            </a>
+            <a
+              href="#experience"
+              className="hover:text-accent transition-colors"
+            >
+              EXPERIENCE
+            </a>
+            <a
+              href="#education"
+              className="hover:text-accent transition-colors"
+            >
+              EDUCATION
+            </a>
+          </div>
+
+          {/* Right (socials) */}
+          <div className="flex gap-4 text-muted-foreground">
+            <a
+              href="https://github.com/hweeying"
+              className="hover:text-accent transition-colors"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/jasminehweeying"
+              className="hover:text-accent transition-colors"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="mailto:jasminehweeying@gmail.com"
+              className="hover:text-accent transition-colors"
+            >
+              <Mail className="w-5 h-5" />
+            </a>
+            <a
+              href="tel:+60167149223"
+              className="hover:text-accent transition-colors"
+            >
+              <Phone className="w-5 h-5" />
+            </a>
+            <a
+              href="https://wa.me/+60167149223"
+              className="hover:text-accent transition-colors"
+            >
+              <FaWhatsapp className="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom line */}
+        <div className="border-t border-border">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs font-mono text-muted-foreground">
+            <span>© {new Date ().getFullYear ()} Jasmine Lai Hwee Ying</span>
+            <span>Designed & built with care</span>
+          </div>
+        </div>
+      </footer>
 
     </main>
   );
