@@ -78,6 +78,7 @@ export default function Home () {
   );
 
   const navLinks = [
+    {href: '#me', label: 'ME'},
     {href: '#project', label: 'PROJECTS'},
     {href: '#experience', label: 'EXPERIENCE'},
     {href: '#education', label: 'EDUCATION'},
@@ -209,7 +210,7 @@ export default function Home () {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <section className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
+      <section id="me" className="pt-40 pb-20 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* --- Top Section: Hero Text (Unchanged) --- */}
           <motion.div
